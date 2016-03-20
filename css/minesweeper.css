@@ -1,0 +1,28 @@
+h1 {
+  text-align: center;
+}
+
+.group:after {
+  clear: both;
+  display: block;
+  content: "";
+}
+
+.minesweeper {
+  width: 378px;
+  margin: auto;
+  border: 1px solid black;
+}
+
+div {
+  width: 40px;
+  height: 40px;
+  border: 1px solid black;
+  margin: auto;
+  float: left;
+  background-color: #ccc;
+}
+
+div:hover {
+  cursor: pointer;
+}
