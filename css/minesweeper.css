@@ -1,5 +1,17 @@
+html, body, div, h1, figure {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  background: transparent;
+}
+
 h1 {
   text-align: center;
+  font-size: 28px;
+  font-family: georgia;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .group:after {
@@ -23,6 +35,11 @@ div {
   background-color: #ccc;
 }
 
-div:hover {
+.hidden:hover {
   cursor: pointer;
+  background-color: #eee;
+}
+
+.revealed {
+  background-color: red;
 }
