@@ -14,7 +14,7 @@ Board.prototype.populate = function () {
   for (var row = 0; row < this.GRIDLENGTH; row++) {
     for (var col = 0; col < this.GRIDLENGTH; col++) {
       if (!(this.grid[row][col] instanceof "Tile")) {
-        this.grid[row][col] = new Tile(false);
+        this.grid[row][col] = new Tile([row, col], false, self);
       }
     }
   }
@@ -39,6 +39,23 @@ Board.prototype.plantBombs = function () {
       }
       this.grid[position[0]][position[1]] = new Tile(true);
     }
+  }
+};
+
+Board.prototype.isWon = function () {
+  var hiddenTileCount = 0;
+  for (var row = 0; row < this.grid.length; row++) {
+    for (var col = 0; col < this.grid.length; col++) {
+      if (!(this.grid[row][col].revealed)) {
+        hiddenTileCount += 1;
+      }
+    }
+  }
+  if (hiddenTileCount === this.NUMBOMBS) {
+    return true;
+  }
+  else {
+    return false;
   }
 };
 

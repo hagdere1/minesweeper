@@ -1,7 +1,9 @@
-var Tile = function (bomb) {
-  this.bomb = bomb;
+var Tile = function (pos, isBomb, board) {
+  this.bomb = isBomb;
   this.revealed = false;
   this.flagged = false;
+  this.pos = pos;
+  this.board = board;
 };
 
 Tile.prototype.flag = function () {
@@ -13,7 +15,7 @@ Tile.prototype.reveal = function () {
 };
 
 Tile.prototype.neighborBombCount = function () {
-  
+
 };
 
 Tile.prototype.neighbors = function () {

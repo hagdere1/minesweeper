@@ -126,7 +126,7 @@
       if ((typeof elementToAppend === "string") || (typeof elementToAppend === HTMLElement)) {
         element.innerHTML += elementToAppend;
       }
-      else if (typeof elementToAppend === DOMNodeCollection) {
+      else if (elementToAppend instanceof DOMNodeCollection) {
         elementToAppend.forEach(function (el) {
           element.innerHTML += el;
         });

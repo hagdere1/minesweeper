@@ -85,13 +85,6 @@
 	  }
 	};
 
-	View.prototype.revealBombs = function () {
-	  for (var row = 0; row < this.gridLength; row++) {
-	    for (var col = 0; col < this.gridLength; col++) {
-	      this.$lElement.append('<div>');
-	    }
-	  }
-	};
 
 	module.exports = View;
 
