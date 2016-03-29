@@ -13,7 +13,9 @@ var View = function (game, $lElement) {
     var pos = $l(event.target).attr('pos').split(',');
     var x = parseInt(pos[0]);
     var y = parseInt(pos[1]);
-    this.game.board.grid[x][y].reveal();
+    var tile = this.game.board.grid[x][y];
+    tile.reveal();
+    $l(event.target).html(tile.neighborBombCount());
   }.bind(this));
 };
 
@@ -28,6 +30,7 @@ View.prototype.drawGrid = function () {
     }
   }
 };
+
 
 
 module.exports = View;

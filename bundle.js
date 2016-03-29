@@ -77,7 +77,9 @@
 	    var pos = $l(event.target).attr('pos').split(',');
 	    var x = parseInt(pos[0]);
 	    var y = parseInt(pos[1]);
-	    this.game.board.grid[x][y].reveal();
+	    var tile = this.game.board.grid[x][y];
+	    tile.reveal();
+	    $l(event.target).html(tile.neighborBombCount());
 	  }.bind(this));
 	};
 
@@ -92,6 +94,7 @@
 	    }
 	  }
 	};
+
 
 
 	module.exports = View;
@@ -184,6 +187,8 @@
 	  this.flagged = false;
 	  this.pos = pos;
 	  this.board = board;
+	  this.directions = [[0, 1], [1, 1], [1, 0], [1, -1],
+	                    [0, -1], [-1, -1], [-1, 0], [-1, 1]];
 	};
 
 	Tile.prototype.flag = function () {
@@ -199,11 +204,36 @@
 	};
 
 	Tile.prototype.neighborBombCount = function () {
+	  var count = 0;
+	  this.neighbors().forEach(function (neighbor) {
+	    if (neighbor.bomb) {
+	      count += 1;
+	    }
+	  });
+	  return count;
+	};
 
+	Tile.prototype.neighborPositions = function () {
+	  var positions = [];
+	  this.directions.forEach(function (dir) {
+	    if ((dir[0] + this.pos[0] >= 0) &&
+	       (dir[0] + this.pos[0] < this.board.GRIDLENGTH) &&
+	       (dir[1] + this.pos[1] >= 0) &&
+	       (dir[1] + this.pos[1] < this.board.GRIDLENGTH)) {
+	         positions.push([dir[0] + this.pos[0], dir[1] + this.pos[1]]);
+	       }
+	  }.bind(this));
+
+	  return positions;
 	};
 
 	Tile.prototype.neighbors = function () {
+	  this.neighbors = [];
+	  this.neighborPositions().forEach(function (pos) {
+	    this.neighbors.push(this.board.grid[pos[0]][pos[1]]);
+	  }.bind(this));
 
+	  return this.neighbors;
 	};
 
 	module.exports = Tile;
