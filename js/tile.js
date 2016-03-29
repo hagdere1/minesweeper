@@ -11,6 +11,10 @@ Tile.prototype.flag = function () {
 };
 
 Tile.prototype.reveal = function () {
+  if (this.bomb) {
+    alert("You blew up!");
+    window.location.reload();
+  }
   this.revealed = true;
 };
 

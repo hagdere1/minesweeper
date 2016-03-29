@@ -10,15 +10,21 @@ var View = function (game, $lElement) {
   $lElement.on('click', function (event) {
     $l(event.target).removeClass('hidden');
     $l(event.target).addClass('revealed');
-
-  });
+    var pos = $l(event.target).attr('pos').split(',');
+    var x = parseInt(pos[0]);
+    var y = parseInt(pos[1]);
+    this.game.board.grid[x][y].reveal();
+  }.bind(this));
 };
 
 View.prototype.drawGrid = function () {
   for (var row = 0; row < this.gridLength; row++) {
     for (var col = 0; col < this.gridLength; col++) {
-      this.$lElement.append('<div>');
-      $l('div').addClass('hidden');
+      var $lDiv = $l('<div>');
+      var pos = row + ',' + col;
+      $lDiv.addClass('hidden');
+      $lDiv.attr('pos', pos);
+      this.$lElement.append($lDiv);
     }
   }
 };

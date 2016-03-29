@@ -6,5 +6,7 @@ $l(function () {
   var board = new Board(9);
   var game = new Game(board);
   var view = new View(game, $l('.minesweeper'));
+  game.board.populate();
+  game.board.plantBombs();
   view.drawGrid();
 });

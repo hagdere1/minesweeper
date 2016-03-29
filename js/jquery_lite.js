@@ -19,7 +19,7 @@
   };
 
   var DOMNodeCollection = function (elements) {
-    this.elements = elements;
+    this.elements = Array.prototype.slice.call(elements);
   };
 
   var $l = root.$l = function (arg) {
@@ -28,15 +28,24 @@
     if (typeof arg === "function") {
       registerCallback(arg);
     }
-    else if (arg instanceof HTMLElement) {
-      elements = [arg];
+    else if (typeof arg === "object") {
+      if (arg instanceof HTMLElement) {
+        elements = [arg];
+        return new DOMNodeCollection(elements);
+      }
     }
-    else {
-      var nodeList = document.querySelectorAll(arg);
-      elements = Array.prototype.slice.call(nodeList);
+    else if (typeof arg === "string") {
+      var argMatches = arg.match(/<(\w+)>/);
+      if (argMatches) {
+        var element = document.createElement(argMatches[1]);
+        return new DOMNodeCollection([element]);
+      }
+      else {
+        var nodeList = document.querySelectorAll(arg);
+        elements = Array.prototype.slice.call(nodeList, 0);
+        return new DOMNodeCollection(elements);
+      }
     }
-
-    return new DOMNodeCollection(elements);
   };
 
   // AJAX requests
@@ -122,16 +131,30 @@
   };
 
   DOMNodeCollection.prototype.append = function (elementToAppend) {
-    this.elements.forEach(function (element) {
-      if ((typeof elementToAppend === "string") || (typeof elementToAppend === HTMLElement)) {
-        element.innerHTML += elementToAppend;
+      if (typeof elementToAppend === "object" &&
+        !(elementToAppend instanceof DOMNodeCollection)) {
+        elementToAppend = $l(elementToAppend);
       }
-      else if (elementToAppend instanceof DOMNodeCollection) {
-        elementToAppend.forEach(function (el) {
-          element.innerHTML += el;
+
+      if (typeof elementToAppend === "string") {
+        this.elements.forEach(function (element) {
+          element.innerHTML += elementToAppend;
         });
       }
-    });
+      else if (elementToAppend instanceof HTMLElement) {
+        this.elements.forEach(function(element) {
+          var newNode = elementToAppend.cloneNode();
+          newNode.innerHTML = elementToAppend.innerHTML;
+          element.appendChild(newNode);
+        });
+      }
+      else if (elementToAppend instanceof DOMNodeCollection) {
+        this.element = this.elements[0];
+        elementToAppend.elements.forEach(function (childNode) {
+          this.element.appendChild(childNode);
+        }.bind(this));
+      }
+
   };
 
   DOMNodeCollection.prototype.attr = function (attribute, value) {

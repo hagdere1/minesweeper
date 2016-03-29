@@ -52,6 +52,8 @@
 	  var board = new Board(9);
 	  var game = new Game(board);
 	  var view = new View(game, $l('.minesweeper'));
+	  game.board.populate();
+	  game.board.plantBombs();
 	  view.drawGrid();
 	});
 
@@ -72,15 +74,21 @@
 	  $lElement.on('click', function (event) {
 	    $l(event.target).removeClass('hidden');
 	    $l(event.target).addClass('revealed');
-
-	  });
+	    var pos = $l(event.target).attr('pos').split(',');
+	    var x = parseInt(pos[0]);
+	    var y = parseInt(pos[1]);
+	    this.game.board.grid[x][y].reveal();
+	  }.bind(this));
 	};
 
 	View.prototype.drawGrid = function () {
 	  for (var row = 0; row < this.gridLength; row++) {
 	    for (var col = 0; col < this.gridLength; col++) {
-	      this.$lElement.append('<div>');
-	      $l('div').addClass('hidden');
+	      var $lDiv = $l('<div>');
+	      var pos = row + ',' + col;
+	      $lDiv.addClass('hidden');
+	      $lDiv.attr('pos', pos);
+	      this.$lElement.append($lDiv);
 	    }
 	  }
 	};
@@ -119,9 +127,7 @@
 	Board.prototype.populate = function () {
 	  for (var row = 0; row < this.GRIDLENGTH; row++) {
 	    for (var col = 0; col < this.GRIDLENGTH; col++) {
-	      if (!(this.grid[row][col] instanceof "Tile")) {
-	        this.grid[row][col] = new Tile(false);
-	      }
+	      this.grid[row][col] = new Tile([row, col], false, this);
 	    }
 	  }
 	};
@@ -135,16 +141,33 @@
 	Board.prototype.plantBombs = function () {
 	  for (var i = 0; i < this.NUMBOMBS; i++) {
 	    var position = this.getBombLocation();
-
-	    if (!(this.grid[position[0]][position[1]] instanceof "Tile")) {
-	      this.grid[position[0]][position[1]] = new Tile(true);
+	    
+	    if (this.grid[position[0]][position[1]].bomb === false) {
+	      this.grid[position[0]][position[1]].bomb = true;
 	    }
 	    else {
-	      while (this.grid[position[0]][position[1]] instanceof "Tile") {
+	      while (this.grid[position[0]][position[1]]) {
 	        position = this.getBombLocation();
 	      }
-	      this.grid[position[0]][position[1]] = new Tile(true);
+	      this.grid[position[0]][position[1]].bomb = true;
 	    }
+	  }
+	};
+
+	Board.prototype.isWon = function () {
+	  var hiddenTileCount = 0;
+	  for (var row = 0; row < this.grid.length; row++) {
+	    for (var col = 0; col < this.grid.length; col++) {
+	      if (!(this.grid[row][col].revealed)) {
+	        hiddenTileCount += 1;
+	      }
+	    }
+	  }
+	  if (hiddenTileCount === this.NUMBOMBS) {
+	    return true;
+	  }
+	  else {
+	    return false;
 	  }
 	};
 
@@ -155,10 +178,12 @@
 /* 4 */
 /***/ function(module, exports) {
 
-	var Tile = function (bomb) {
-	  this.bomb = bomb;
+	var Tile = function (pos, isBomb, board) {
+	  this.bomb = isBomb;
 	  this.revealed = false;
 	  this.flagged = false;
+	  this.pos = pos;
+	  this.board = board;
 	};
 
 	Tile.prototype.flag = function () {
@@ -166,11 +191,15 @@
 	};
 
 	Tile.prototype.reveal = function () {
+	  if (this.bomb) {
+	    alert("You blew up!");
+	    window.location.reload();
+	  }
 	  this.revealed = true;
 	};
 
 	Tile.prototype.neighborBombCount = function () {
-	  
+
 	};
 
 	Tile.prototype.neighbors = function () {

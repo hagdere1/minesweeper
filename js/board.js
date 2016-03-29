@@ -13,9 +13,7 @@ var Board = function (gridLength) {
 Board.prototype.populate = function () {
   for (var row = 0; row < this.GRIDLENGTH; row++) {
     for (var col = 0; col < this.GRIDLENGTH; col++) {
-      if (!(this.grid[row][col] instanceof "Tile")) {
-        this.grid[row][col] = new Tile([row, col], false, self);
-      }
+      this.grid[row][col] = new Tile([row, col], false, this);
     }
   }
 };
@@ -29,15 +27,15 @@ Board.prototype.getBombLocation = function () {
 Board.prototype.plantBombs = function () {
   for (var i = 0; i < this.NUMBOMBS; i++) {
     var position = this.getBombLocation();
-
-    if (!(this.grid[position[0]][position[1]] instanceof "Tile")) {
-      this.grid[position[0]][position[1]] = new Tile(true);
+    
+    if (this.grid[position[0]][position[1]].bomb === false) {
+      this.grid[position[0]][position[1]].bomb = true;
     }
     else {
-      while (this.grid[position[0]][position[1]] instanceof "Tile") {
+      while (this.grid[position[0]][position[1]]) {
         position = this.getBombLocation();
       }
-      this.grid[position[0]][position[1]] = new Tile(true);
+      this.grid[position[0]][position[1]].bomb = true;
     }
   }
 };
