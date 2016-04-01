@@ -33,6 +33,7 @@ div {
   margin: auto;
   float: left;
   background-color: #ccc;
+  text-align: center;
 }
 
 .hidden:hover {
@@ -42,4 +43,8 @@ div {
 
 .revealed {
   background-color: red;
+}
+
+.bomb {
+  background-color: yellow;
 }

@@ -53,7 +53,6 @@
 	  var game = new Game(board);
 	  var view = new View(game, $l('.minesweeper'));
 	  game.board.populate();
-	  game.board.plantBombs();
 	  view.drawGrid();
 	});
 
@@ -67,10 +66,6 @@
 	  this.$lElement = $lElement;
 	  this.gridLength = this.game.board.GRIDLENGTH;
 
-	  this.startGame = function () {
-	    console.log('Starting game');
-	  };
-
 	  $lElement.on('click', function (event) {
 	    $l(event.target).removeClass('hidden');
 	    $l(event.target).addClass('revealed');
@@ -79,7 +74,20 @@
 	    var y = parseInt(pos[1]);
 	    var tile = this.game.board.grid[x][y];
 	    tile.reveal();
-	    $l(event.target).html(tile.neighborBombCount());
+	    this.game.board.isWon();
+	    // for (var row = 0; row < this.gridLength; row++) {
+	    //   for (var col = 0; col < this.gridLength; col++) {
+	    //     if (this.game.board.grid[row][col].revealed) {
+	    //
+	    //
+	    //
+	    //     }
+	    //   }
+	    // }
+	    if (!tile.bomb && tile.neighborBombCount() > 0) {
+	      $l(event.target).html(tile.neighborBombCount());
+	    }
+
 	  }.bind(this));
 	};
 
@@ -90,11 +98,16 @@
 	      var pos = row + ',' + col;
 	      $lDiv.addClass('hidden');
 	      $lDiv.attr('pos', pos);
+
+	      // Testing
+	      if (this.game.board.grid[row][col].bomb) {
+	        $lDiv.addClass('bomb');
+	      }
+
 	      this.$lElement.append($lDiv);
 	    }
 	  }
 	};
-
 
 
 	module.exports = View;
@@ -119,7 +132,7 @@
 
 	var Board = function (gridLength) {
 	  this.GRIDLENGTH = gridLength;
-	  this.NUMBOMBS = 10;
+	  this.NUMBOMBS = 20;
 	  this.grid = new Array(gridLength);
 
 	  for (var i = 0; i < gridLength; i++) {
@@ -128,9 +141,13 @@
 	};
 
 	Board.prototype.populate = function () {
+	  this.plantBombs();
+
 	  for (var row = 0; row < this.GRIDLENGTH; row++) {
 	    for (var col = 0; col < this.GRIDLENGTH; col++) {
-	      this.grid[row][col] = new Tile([row, col], false, this);
+	      if (!(this.grid[row][col] instanceof Tile)) {
+	        this.grid[row][col] = new Tile([row, col], false, this);
+	      }
 	    }
 	  }
 	};
@@ -144,16 +161,16 @@
 	Board.prototype.plantBombs = function () {
 	  for (var i = 0; i < this.NUMBOMBS; i++) {
 	    var position = this.getBombLocation();
-	    
-	    if (this.grid[position[0]][position[1]].bomb === false) {
-	      this.grid[position[0]][position[1]].bomb = true;
+	    var x = position[0];
+	    var y = position[1];
+
+	    while (this.grid[x][y] instanceof Tile) {
+	      position = this.getBombLocation();
+	      x = position[0];
+	      y = position[1];
 	    }
-	    else {
-	      while (this.grid[position[0]][position[1]]) {
-	        position = this.getBombLocation();
-	      }
-	      this.grid[position[0]][position[1]].bomb = true;
-	    }
+
+	    this.grid[x][y] = new Tile([x, y], true, this);
 	  }
 	};
 
@@ -167,10 +184,8 @@
 	    }
 	  }
 	  if (hiddenTileCount === this.NUMBOMBS) {
-	    return true;
-	  }
-	  else {
-	    return false;
+	    alert('You win! Play again?');
+	    window.location.reload();
 	  }
 	};
 
@@ -201,11 +216,16 @@
 	    window.location.reload();
 	  }
 	  this.revealed = true;
+	  this.getNeighbors().forEach(function (neighbor) {
+	    if (neighbor.neighborBombCount() === 0 && !neighbor.revealed && !neighbor.bomb) {
+	      neighbor.reveal();
+	    }
+	  });
 	};
 
 	Tile.prototype.neighborBombCount = function () {
 	  var count = 0;
-	  this.neighbors().forEach(function (neighbor) {
+	  this.getNeighbors().forEach(function (neighbor) {
 	    if (neighbor.bomb) {
 	      count += 1;
 	    }
@@ -227,13 +247,13 @@
 	  return positions;
 	};
 
-	Tile.prototype.neighbors = function () {
-	  this.neighbors = [];
+	Tile.prototype.getNeighbors = function () {
+	  var neighbors = [];
 	  this.neighborPositions().forEach(function (pos) {
-	    this.neighbors.push(this.board.grid[pos[0]][pos[1]]);
+	    neighbors.push(this.board.grid[pos[0]][pos[1]]);
 	  }.bind(this));
 
-	  return this.neighbors;
+	  return neighbors;
 	};
 
 	module.exports = Tile;

@@ -2,7 +2,7 @@ var Tile = require('./tile.js');
 
 var Board = function (gridLength) {
   this.GRIDLENGTH = gridLength;
-  this.NUMBOMBS = 10;
+  this.NUMBOMBS = 20;
   this.grid = new Array(gridLength);
 
   for (var i = 0; i < gridLength; i++) {
@@ -11,9 +11,13 @@ var Board = function (gridLength) {
 };
 
 Board.prototype.populate = function () {
+  this.plantBombs();
+
   for (var row = 0; row < this.GRIDLENGTH; row++) {
     for (var col = 0; col < this.GRIDLENGTH; col++) {
-      this.grid[row][col] = new Tile([row, col], false, this);
+      if (!(this.grid[row][col] instanceof Tile)) {
+        this.grid[row][col] = new Tile([row, col], false, this);
+      }
     }
   }
 };
@@ -27,16 +31,16 @@ Board.prototype.getBombLocation = function () {
 Board.prototype.plantBombs = function () {
   for (var i = 0; i < this.NUMBOMBS; i++) {
     var position = this.getBombLocation();
-    
-    if (this.grid[position[0]][position[1]].bomb === false) {
-      this.grid[position[0]][position[1]].bomb = true;
+    var x = position[0];
+    var y = position[1];
+
+    while (this.grid[x][y] instanceof Tile) {
+      position = this.getBombLocation();
+      x = position[0];
+      y = position[1];
     }
-    else {
-      while (this.grid[position[0]][position[1]]) {
-        position = this.getBombLocation();
-      }
-      this.grid[position[0]][position[1]].bomb = true;
-    }
+
+    this.grid[x][y] = new Tile([x, y], true, this);
   }
 };
 
@@ -50,10 +54,8 @@ Board.prototype.isWon = function () {
     }
   }
   if (hiddenTileCount === this.NUMBOMBS) {
-    return true;
-  }
-  else {
-    return false;
+    alert('You win! Play again?');
+    window.location.reload();
   }
 };
 

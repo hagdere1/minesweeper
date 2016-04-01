@@ -18,11 +18,16 @@ Tile.prototype.reveal = function () {
     window.location.reload();
   }
   this.revealed = true;
+  this.getNeighbors().forEach(function (neighbor) {
+    if (neighbor.neighborBombCount() === 0 && !neighbor.revealed && !neighbor.bomb) {
+      neighbor.reveal();
+    }
+  });
 };
 
 Tile.prototype.neighborBombCount = function () {
   var count = 0;
-  this.neighbors().forEach(function (neighbor) {
+  this.getNeighbors().forEach(function (neighbor) {
     if (neighbor.bomb) {
       count += 1;
     }
@@ -44,13 +49,13 @@ Tile.prototype.neighborPositions = function () {
   return positions;
 };
 
-Tile.prototype.neighbors = function () {
-  this.neighbors = [];
+Tile.prototype.getNeighbors = function () {
+  var neighbors = [];
   this.neighborPositions().forEach(function (pos) {
-    this.neighbors.push(this.board.grid[pos[0]][pos[1]]);
+    neighbors.push(this.board.grid[pos[0]][pos[1]]);
   }.bind(this));
 
-  return this.neighbors;
+  return neighbors;
 };
 
 module.exports = Tile;
