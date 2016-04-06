@@ -14,8 +14,9 @@ var View = function (game, $lElement) {
       $l(event.target).empty();
       if (this.game.board.isKilled(clickedTile)) {
         this.exposeBombs();
-        alert('You lose!');
-        window.location.reload();
+        $l('section').append('<p>You Lose!</p>');
+        $l('p').addClass('lose-text');
+        $l('section').append('<button>Play Again</button>');
       }
       else {
         clickedTile.reveal();
@@ -28,8 +29,9 @@ var View = function (game, $lElement) {
         this.clearAdjacentTiles();
         if (this.game.board.isWon()) {
           this.exposeBombs();
-          alert('You win!');
-          window.location.reload();
+          $l('section').append('<p>You Win!</p>');
+          $l('p').addClass('win-text');
+          $l('section').append('<button>Play Again</button>');
         }
       }
     }
@@ -39,6 +41,10 @@ var View = function (game, $lElement) {
         $l(event.target).html('&#x2620;');
       }
     }
+
+    $l('button').on('click', function () {
+      window.location.reload();
+    });
   }.bind(this));
 };
 
@@ -84,10 +90,11 @@ View.prototype.exposeBombs = function () {
 
       if (tile.bomb) {
         $lRevealedTile.html('&#128163;');
+        $lRevealedTile.removeClass('hidden');
+        $lRevealedTile.addClass('bomb');
       }
     }
   }
-
 };
 
 module.exports = View;

@@ -77,8 +77,9 @@
 	      $l(event.target).empty();
 	      if (this.game.board.isKilled(clickedTile)) {
 	        this.exposeBombs();
-	        alert('You lose!');
-	        window.location.reload();
+	        $l('section').append('<p>You Lose!</p>');
+	        $l('p').addClass('lose-text');
+	        $l('section').append('<button>Play Again</button>');
 	      }
 	      else {
 	        clickedTile.reveal();
@@ -91,8 +92,9 @@
 	        this.clearAdjacentTiles();
 	        if (this.game.board.isWon()) {
 	          this.exposeBombs();
-	          alert('You win!');
-	          window.location.reload();
+	          $l('section').append('<p>You Win!</p>');
+	          $l('p').addClass('win-text');
+	          $l('section').append('<button>Play Again</button>');
 	        }
 	      }
 	    }
@@ -102,6 +104,10 @@
 	        $l(event.target).html('&#x2620;');
 	      }
 	    }
+
+	    $l('button').on('click', function () {
+	      window.location.reload();
+	    });
 	  }.bind(this));
 	};
 
@@ -112,12 +118,6 @@
 	      var pos = row + ',' + col;
 	      $lDiv.addClass('hidden');
 	      $lDiv.attr('pos', pos);
-
-	      // Testing
-	      // if (this.game.board.grid[row][col].bomb) {
-	      //   $lDiv.addClass('bomb');
-	      // }
-
 	      this.$lElement.append($lDiv);
 	    }
 	  }
@@ -153,10 +153,11 @@
 
 	      if (tile.bomb) {
 	        $lRevealedTile.html('&#128163;');
+	        $lRevealedTile.removeClass('hidden');
+	        $lRevealedTile.addClass('bomb');
 	      }
 	    }
 	  }
-
 	};
 
 	module.exports = View;

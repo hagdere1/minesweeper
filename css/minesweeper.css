@@ -1,9 +1,21 @@
-html, body, div, h1, figure {
+html, body, div, h1, p, figure {
   border: 0;
   margin: 0;
   padding: 0;
   font: inherit;
+  text-align: inherit;
   background: transparent;
+}
+
+section {
+  width: 378px;
+  height: 500px;
+  margin: auto;
+  padding: 40px;
+  padding-top: 30px;
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: #3399FF;
 }
 
 h1 {
@@ -11,8 +23,7 @@ h1 {
   font-size: 28px;
   font-family: georgia;
   font-weight: bold;
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .group:after {
@@ -23,7 +34,7 @@ h1 {
 
 .minesweeper {
   width: 378px;
-  margin: auto;
+  /*margin: auto;*/
   border: 3px solid black;
 }
 
@@ -33,11 +44,26 @@ div {
   line-height: 40px;
   text-align: center;
   border: 1px solid black;
-  margin: auto;
   float: left;
   background-color: red;
   vertical-align: middle;
   font-size: 20px;
+}
+
+p {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.lose-text {
+  color: red;
+}
+
+.win-text {
+  color: #00ff00;
 }
 
 .hidden:hover {
@@ -47,4 +73,19 @@ div {
 
 .revealed {
   background-color: #ccc;
+}
+
+.bomb {
+  background-color: #eee;
+}
+
+button {
+  display: block;
+  width: 70px;
+  height: 40px;
+  background: blue;
+  color: white;
+  font-weight: bold;
+  margin: auto;
+  border-radius: 3px;
 }
