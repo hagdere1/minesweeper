@@ -2,7 +2,7 @@ var Tile = require('./tile.js');
 
 var Board = function (gridLength) {
   this.GRIDLENGTH = gridLength;
-  this.NUMBOMBS = 20;
+  this.NUMBOMBS = 10;
   this.grid = new Array(gridLength);
 
   for (var i = 0; i < gridLength; i++) {
@@ -54,8 +54,19 @@ Board.prototype.isWon = function () {
     }
   }
   if (hiddenTileCount === this.NUMBOMBS) {
-    alert('You win! Play again?');
-    window.location.reload();
+    return true;
+  }
+  else {
+    return false;
+  }
+};
+
+Board.prototype.isKilled = function (tile) {
+  if (tile.bomb) {
+    return true;
+  }
+  else {
+    return false;
   }
 };
 

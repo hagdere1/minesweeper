@@ -23,7 +23,7 @@ h1 {
 .minesweeper {
   width: 378px;
   margin: auto;
-  border: 1px solid black;
+  border: 3px solid black;
 }
 
 div {
@@ -32,19 +32,21 @@ div {
   border: 1px solid black;
   margin: auto;
   float: left;
-  background-color: #ccc;
+  background-color: red;
   text-align: center;
+  font-size: 20px;
 }
 
 .hidden:hover {
   cursor: pointer;
-  background-color: #eee;
+  background-color: yellow;
 }
 
 .revealed {
-  background-color: red;
+  background-color: #ccc;
 }
 
+/* Testing only */
 .bomb {
   background-color: yellow;
 }

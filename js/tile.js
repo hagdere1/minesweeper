@@ -13,11 +13,7 @@ Tile.prototype.flag = function () {
 };
 
 Tile.prototype.reveal = function () {
-  if (this.bomb) {
-    alert("You blew up!");
-    window.location.reload();
-  }
-  else {
+  if (!(this.bomb)) {
     this.revealed = true;
     if (this.neighborBombCount() === 0) {
       this.getNeighbors().forEach(function (neighbor) {

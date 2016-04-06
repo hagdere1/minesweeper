@@ -9,20 +9,34 @@ var View = function (game, $lElement) {
     var y = parseInt(pos[1]);
     var clickedTile = this.game.board.grid[x][y];
 
+    // Left click
     if (event.button === 0) {
       $l(event.target).empty();
-      clickedTile.reveal();
-      $l(event.target).removeClass('hidden');
-      $l(event.target).addClass('revealed');
-      if (!clickedTile.bomb && clickedTile.neighborBombCount() > 0) {
-        $l(event.target).html(clickedTile.neighborBombCount());
+      if (this.game.board.isKilled(clickedTile)) {
+        this.exposeBombs();
+        alert('You lose!');
+        window.location.reload();
       }
-      this.clearAdjacentTiles();
-      this.game.board.isWon();
+      else {
+        clickedTile.reveal();
+        $l(event.target).removeClass('hidden');
+        $l(event.target).addClass('revealed');
+        if (!clickedTile.bomb && clickedTile.neighborBombCount() > 0) {
+          $l(event.target).html(clickedTile.neighborBombCount());
+        }
+
+        this.clearAdjacentTiles();
+        if (this.game.board.isWon()) {
+          this.exposeBombs();
+          alert('You win!');
+          window.location.reload();
+        }
+      }
     }
+    // Right click
     else {
       if (event.button === 2 && $l(event.target).attr('class') === 'hidden') {
-        $l(event.target).html('Flag');
+        $l(event.target).html('&#x2620;');
       }
     }
   }.bind(this));
@@ -37,9 +51,9 @@ View.prototype.drawGrid = function () {
       $lDiv.attr('pos', pos);
 
       // Testing
-      if (this.game.board.grid[row][col].bomb) {
-        $lDiv.addClass('bomb');
-      }
+      // if (this.game.board.grid[row][col].bomb) {
+      //   $lDiv.addClass('bomb');
+      // }
 
       this.$lElement.append($lDiv);
     }
@@ -54,7 +68,7 @@ View.prototype.clearAdjacentTiles = function () {
       var position = (row * this.gridLength) + col;
       var $lRevealedTile = $l($lDiv.elements[position]);
 
-      if (tile.revealed && $lRevealedTile.html() !== 'Flag') {    
+      if (tile.revealed && $lRevealedTile.html() !== 'Flag') {
         $lRevealedTile.removeClass('hidden');
         $lRevealedTile.addClass('revealed');
 
@@ -64,6 +78,24 @@ View.prototype.clearAdjacentTiles = function () {
       }
     }
   }
+};
+
+View.prototype.exposeBombs = function () {
+  $lDiv = $l('div');
+  for (var row = 0; row < this.gridLength; row++) {
+    for (var col = 0; col < this.gridLength; col++) {
+      var tile = this.game.board.grid[row][col];
+      var position = (row * this.gridLength) + col;
+      var $lRevealedTile = $l($lDiv.elements[position]);
+
+      if (tile.bomb) {
+        // $lRevealedTile.removeClass('hidden');
+        // $lRevealedTile.addClass('bomb');
+        $lRevealedTile.html('&#128163;');
+      }
+    }
+  }
+
 };
 
 module.exports = View;
