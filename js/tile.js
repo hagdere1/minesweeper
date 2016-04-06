@@ -17,12 +17,16 @@ Tile.prototype.reveal = function () {
     alert("You blew up!");
     window.location.reload();
   }
-  this.revealed = true;
-  this.getNeighbors().forEach(function (neighbor) {
-    if (neighbor.neighborBombCount() === 0 && !neighbor.revealed && !neighbor.bomb) {
-      neighbor.reveal();
+  else {
+    this.revealed = true;
+    if (this.neighborBombCount() === 0) {
+      this.getNeighbors().forEach(function (neighbor) {
+        if (!neighbor.revealed && !neighbor.bomb) {
+          neighbor.reveal();
+        }
+      });
     }
-  });
+  }
 };
 
 Tile.prototype.neighborBombCount = function () {
