@@ -131,7 +131,7 @@
 	      var position = (row * this.gridLength) + col;
 	      var $lRevealedTile = $l($lDiv.elements[position]);
 
-	      if (tile.revealed && $lRevealedTile.html() !== 'Flag') {
+	      if (tile.revealed && $lRevealedTile.html() !== '&#128163;') {
 	        $lRevealedTile.removeClass('hidden');
 	        $lRevealedTile.addClass('revealed');
 
@@ -152,8 +152,6 @@
 	      var $lRevealedTile = $l($lDiv.elements[position]);
 
 	      if (tile.bomb) {
-	        // $lRevealedTile.removeClass('hidden');
-	        // $lRevealedTile.addClass('bomb');
 	        $lRevealedTile.html('&#128163;');
 	      }
 	    }

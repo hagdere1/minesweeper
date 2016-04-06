@@ -49,12 +49,6 @@ View.prototype.drawGrid = function () {
       var pos = row + ',' + col;
       $lDiv.addClass('hidden');
       $lDiv.attr('pos', pos);
-
-      // Testing
-      // if (this.game.board.grid[row][col].bomb) {
-      //   $lDiv.addClass('bomb');
-      // }
-
       this.$lElement.append($lDiv);
     }
   }
@@ -68,7 +62,7 @@ View.prototype.clearAdjacentTiles = function () {
       var position = (row * this.gridLength) + col;
       var $lRevealedTile = $l($lDiv.elements[position]);
 
-      if (tile.revealed && $lRevealedTile.html() !== 'Flag') {
+      if (tile.revealed && $lRevealedTile.html() !== '&#128163;') {
         $lRevealedTile.removeClass('hidden');
         $lRevealedTile.addClass('revealed');
 
@@ -89,8 +83,6 @@ View.prototype.exposeBombs = function () {
       var $lRevealedTile = $l($lDiv.elements[position]);
 
       if (tile.bomb) {
-        // $lRevealedTile.removeClass('hidden');
-        // $lRevealedTile.addClass('bomb');
         $lRevealedTile.html('&#128163;');
       }
     }
