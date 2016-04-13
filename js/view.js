@@ -25,26 +25,37 @@ var View = function (game, $lElement) {
 View.prototype.handleLeftClick = function (event, clickedTile) {
   $l(event.target).empty();
   if (this.game.isKilled(clickedTile)) {
-    this.exposeBombs();
-    $l('section').append('<p>You Lose!</p>');
-    $l('p').addClass('lose-text');
-    $l('section').append('<button>Play Again</button>');
+    this.gameLost();
   }
   else {
-    clickedTile.reveal();
-    $l(event.target).removeClass('hidden');
-    $l(event.target).addClass('revealed');
-    if (!clickedTile.bomb && clickedTile.neighborBombCount() > 0) {
-      $l(event.target).html(clickedTile.neighborBombCount());
-    }
-
+    this.revealTile(clickedTile);
     this.clearAdjacentTiles();
     if (this.game.isWon()) {
-      this.exposeBombs();
-      $l('section').append('<p>You Win!</p>');
-      $l('p').addClass('win-text');
-      $l('section').append('<button>Play Again</button>');
+      this.gameWon();
     }
+  }
+};
+
+View.prototype.gameLost = function () {
+  this.exposeBombs();
+  $l('section').append('<p>You Lose!</p>');
+  $l('p').addClass('lose-text');
+  $l('section').append('<button>Play Again</button>');
+};
+
+View.prototype.gameWon = function () {
+  this.exposeBombs();
+  $l('section').append('<p>You Win!</p>');
+  $l('p').addClass('win-text');
+  $l('section').append('<button>Play Again</button>');
+};
+
+View.prototype.revealTile = function (tile) {
+  tile.reveal();
+  $l(event.target).removeClass('hidden');
+  $l(event.target).addClass('revealed');
+  if (!tile.bomb && tile.neighborBombCount() > 0) {
+    $l(event.target).html(tile.neighborBombCount());
   }
 };
 
