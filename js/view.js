@@ -12,7 +12,7 @@ var View = function (game, $lElement) {
     // Left click
     if (event.button === 0) {
       $l(event.target).empty();
-      if (this.game.board.isKilled(clickedTile)) {
+      if (this.game.isKilled(clickedTile)) {
         this.exposeBombs();
         $l('section').append('<p>You Lose!</p>');
         $l('p').addClass('lose-text');
@@ -27,7 +27,7 @@ var View = function (game, $lElement) {
         }
 
         this.clearAdjacentTiles();
-        if (this.game.board.isWon()) {
+        if (this.game.isWon()) {
           this.exposeBombs();
           $l('section').append('<p>You Win!</p>');
           $l('p').addClass('win-text');

@@ -44,30 +44,4 @@ Board.prototype.plantBombs = function () {
   }
 };
 
-Board.prototype.isWon = function () {
-  var hiddenTileCount = 0;
-  for (var row = 0; row < this.grid.length; row++) {
-    for (var col = 0; col < this.grid.length; col++) {
-      if (!(this.grid[row][col].revealed)) {
-        hiddenTileCount += 1;
-      }
-    }
-  }
-  if (hiddenTileCount === this.NUMBOMBS) {
-    return true;
-  }
-  else {
-    return false;
-  }
-};
-
-Board.prototype.isKilled = function (tile) {
-  if (tile.bomb) {
-    return true;
-  }
-  else {
-    return false;
-  }
-};
-
 module.exports = Board;

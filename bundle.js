@@ -75,7 +75,7 @@
 	    // Left click
 	    if (event.button === 0) {
 	      $l(event.target).empty();
-	      if (this.game.board.isKilled(clickedTile)) {
+	      if (this.game.isKilled(clickedTile)) {
 	        this.exposeBombs();
 	        $l('section').append('<p>You Lose!</p>');
 	        $l('p').addClass('lose-text');
@@ -90,7 +90,7 @@
 	        }
 
 	        this.clearAdjacentTiles();
-	        if (this.game.board.isWon()) {
+	        if (this.game.isWon()) {
 	          this.exposeBombs();
 	          $l('section').append('<p>You Win!</p>');
 	          $l('p').addClass('win-text');
@@ -171,6 +171,32 @@
 	  this.board = board;
 	};
 
+	Game.prototype.isWon = function () {
+	  var hiddenTileCount = 0;
+	  for (var row = 0; row < this.board.grid.length; row++) {
+	    for (var col = 0; col < this.board.grid.length; col++) {
+	      if (!(this.board.grid[row][col].revealed)) {
+	        hiddenTileCount += 1;
+	      }
+	    }
+	  }
+	  if (hiddenTileCount === this.board.NUMBOMBS) {
+	    return true;
+	  }
+	  else {
+	    return false;
+	  }
+	};
+
+	Game.prototype.isKilled = function (tile) {
+	  if (tile.bomb) {
+	    return true;
+	  }
+	  else {
+	    return false;
+	  }
+	};
+
 	module.exports = Game;
 
 
@@ -221,32 +247,6 @@
 	    }
 
 	    this.grid[x][y] = new Tile([x, y], true, this);
-	  }
-	};
-
-	Board.prototype.isWon = function () {
-	  var hiddenTileCount = 0;
-	  for (var row = 0; row < this.grid.length; row++) {
-	    for (var col = 0; col < this.grid.length; col++) {
-	      if (!(this.grid[row][col].revealed)) {
-	        hiddenTileCount += 1;
-	      }
-	    }
-	  }
-	  if (hiddenTileCount === this.NUMBOMBS) {
-	    return true;
-	  }
-	  else {
-	    return false;
-	  }
-	};
-
-	Board.prototype.isKilled = function (tile) {
-	  if (tile.bomb) {
-	    return true;
-	  }
-	  else {
-	    return false;
 	  }
 	};
 
