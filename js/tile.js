@@ -1,15 +1,10 @@
 var Tile = function (pos, isBomb, board) {
   this.bomb = isBomb;
   this.revealed = false;
-  this.flagged = false;
   this.pos = pos;
   this.board = board;
   this.directions = [[0, 1], [1, 1], [1, 0], [1, -1],
                     [0, -1], [-1, -1], [-1, 0], [-1, 1]];
-};
-
-Tile.prototype.flag = function () {
-  this.flagged = true;
 };
 
 Tile.prototype.reveal = function () {

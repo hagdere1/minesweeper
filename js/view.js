@@ -38,7 +38,7 @@ var View = function (game, $lElement) {
     // Right click
     else {
       if (event.button === 2 && $l(event.target).attr('class') === 'hidden') {
-        $l(event.target).html('&#x2620;');
+        this.toggleFlag(event);
       }
     }
 
@@ -46,6 +46,15 @@ var View = function (game, $lElement) {
       window.location.reload();
     });
   }.bind(this));
+};
+
+View.prototype.toggleFlag = function (event) {
+  if ($l(event.target).html().length === 0) {
+    $l(event.target).html('&#x2620;');
+  }
+  else {
+    $l(event.target).empty();
+  }
 };
 
 View.prototype.drawGrid = function () {
