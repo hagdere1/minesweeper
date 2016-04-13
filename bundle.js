@@ -49,8 +49,7 @@
 	var Board = __webpack_require__(3);
 
 	$l(function () {
-	  var board = new Board(9);
-	  var game = new Game(board);
+	  var game = new Game(9);
 	  var view = new View(game, $l('.minesweeper'));
 	  game.board.populate();
 	  view.drawGrid();
@@ -72,43 +71,49 @@
 	    var y = parseInt(pos[1]);
 	    var clickedTile = this.game.board.grid[x][y];
 
-	    // Left click
 	    if (event.button === 0) {
-	      $l(event.target).empty();
-	      if (this.game.isKilled(clickedTile)) {
-	        this.exposeBombs();
-	        $l('section').append('<p>You Lose!</p>');
-	        $l('p').addClass('lose-text');
-	        $l('section').append('<button>Play Again</button>');
-	      }
-	      else {
-	        clickedTile.reveal();
-	        $l(event.target).removeClass('hidden');
-	        $l(event.target).addClass('revealed');
-	        if (!clickedTile.bomb && clickedTile.neighborBombCount() > 0) {
-	          $l(event.target).html(clickedTile.neighborBombCount());
-	        }
-
-	        this.clearAdjacentTiles();
-	        if (this.game.isWon()) {
-	          this.exposeBombs();
-	          $l('section').append('<p>You Win!</p>');
-	          $l('p').addClass('win-text');
-	          $l('section').append('<button>Play Again</button>');
-	        }
-	      }
+	      this.handleLeftClick(event, clickedTile);
 	    }
-	    // Right click
 	    else {
-	      if (event.button === 2 && $l(event.target).attr('class') === 'hidden') {
-	        this.toggleFlag(event);
-	      }
+	      this.handleRightClick(event);
 	    }
 
 	    $l('button').on('click', function () {
 	      window.location.reload();
-	    });
+	    }.bind(this));
 	  }.bind(this));
+	};
+
+	View.prototype.handleLeftClick = function (event, clickedTile) {
+	  $l(event.target).empty();
+	  if (this.game.isKilled(clickedTile)) {
+	    this.exposeBombs();
+	    $l('section').append('<p>You Lose!</p>');
+	    $l('p').addClass('lose-text');
+	    $l('section').append('<button>Play Again</button>');
+	  }
+	  else {
+	    clickedTile.reveal();
+	    $l(event.target).removeClass('hidden');
+	    $l(event.target).addClass('revealed');
+	    if (!clickedTile.bomb && clickedTile.neighborBombCount() > 0) {
+	      $l(event.target).html(clickedTile.neighborBombCount());
+	    }
+
+	    this.clearAdjacentTiles();
+	    if (this.game.isWon()) {
+	      this.exposeBombs();
+	      $l('section').append('<p>You Win!</p>');
+	      $l('p').addClass('win-text');
+	      $l('section').append('<button>Play Again</button>');
+	    }
+	  }
+	};
+
+	View.prototype.handleRightClick = function (event) {
+	  if (event.button === 2 && $l(event.target).attr('class') === 'hidden') {
+	    this.toggleFlag(event);
+	  }
 	};
 
 	View.prototype.toggleFlag = function (event) {
@@ -174,10 +179,12 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var Board = __webpack_require__(3);
 
 	var Game = function (board) {
-	  this.board = board;
+	  this.board = new Board(9);
 	};
 
 	Game.prototype.isWon = function () {

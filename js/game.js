@@ -1,5 +1,7 @@
+var Board = require('./board.js');
+
 var Game = function (board) {
-  this.board = board;
+  this.board = new Board(9);
 };
 
 Game.prototype.isWon = function () {
